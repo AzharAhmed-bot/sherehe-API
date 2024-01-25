@@ -18,7 +18,13 @@ class Users(db.Model,SerializerMixin):
 
     id=db.Column(db.Integer() ,primary_key=True)
     name=db.Column(db.String(), unique=True)
-    password=db.Column(db.String())
+    password = db.Column(db.String())
+    
+
+class Sherehe(db.Model,SerializerMixin):
+    __tablename__="sherehe"
+    id=db.Column(db.Integer() ,primary_key=True)
+    name=db.Column(db.String(), unique=True)
     amount=db.Column(db.Integer(), default=0)
     paid=db.Column(db.Boolean, default=False)
 

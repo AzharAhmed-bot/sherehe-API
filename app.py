@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, make_response, request
-from models import db, Users
+from models import db, Users,Sherehe
 from flask_cors import CORS
 from config import AppConfig
 from flask_migrate import Migrate
@@ -62,6 +62,50 @@ def update(id):
         db.session.add(user)
         db.session.commit()
         return make_response(jsonify({"message": f"User {id}'s information updated"}), 200)
+    
+@app.route('/sherehe', methods=['GET', 'POST'])
+def sherehe():
+    if request.method == "GET":
+        sherehe = [sherehe.to_dict() for sherehe in Sherehe.query.all()]
+        return jsonify({'Sherehe': sherehe})
+    elif request.method == "POST":
+        data = request.get_json()
+        new_sherehe = Sherehe(**data)  
+        db.session.add(new_sherehe)
+        db.session.commit()
+        return jsonify(new_sherehe.to_dict()), 201
+
+
+
+@app.route('/sherehe/<int:id>',methods=["GET","PATCH","DELETE"])
+def sherehe_by_id(id):
+    sherehe=Sherehe.query.filter_by(id=id).first()
+    if request.method=="GET":
+        if not sherehe:
+            return jsonify({"error":"User does not exist."}),404
+        return make_response(jsonify({"User":sherehe.to_dict()}),200)
+    elif request.method=="DELETE":    
+        if not sherehe:
+            return make_response(jsonify({"message":f"No Sherehe with id {id}"}),400)
+        db.session.delete(sherehe)
+        db.session.commit()
+        return make_response(jsonify({"message" : f"Sherehe {id} has been sucessfully deleted"} ),200)
+    elif request.method=="PATCH":
+        if not sherehe:
+            return make_response(jsonify({"message":f"No Sherehe with id {id}"}),400)
+
+        data=request.get_json()
+        for attr, value in data.items():
+            setattr(sherehe, attr, value)
+
+        db.session.add(sherehe)
+        db.session.commit()
+        return make_response(jsonify({"message": f"Sherehe {id}'s information updated"}), 200)
+
+
+
+
+
     
 
 

@@ -17,3 +17,4 @@ SQLAlchemy-serializer==1.4.1
 typing_extensions==4.9.0
 Werkzeug==3.0.1
 importlib-metadata==4.5.0
+gunicorn===21.2.0

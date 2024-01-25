@@ -12,6 +12,7 @@ flask-migrate = "*"
 sqlalchemy-serializer = "*"
 flask-bcrypt = "*"
 importlib-metadata = "*"
+gunicorn = "*"
 
 [dev-packages]
 

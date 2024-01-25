@@ -67,7 +67,7 @@ def update(id):
 def sherehe():
     if request.method == "GET":
         sherehe = [sherehe.to_dict() for sherehe in Sherehe.query.all()]
-        return jsonify({'Sherehe': sherehe})
+        return jsonify(sherehe)
     elif request.method == "POST":
         data = request.get_json()
         new_sherehe = Sherehe(**data)  

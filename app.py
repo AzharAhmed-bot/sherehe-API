@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-CORS(app, resources={r"/sherehe/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/sherehe/*": {"origins": ["http://localhost:5173", "https://icssherehe.netlify.app/"]}})
 
 app.config.from_object(AppConfig)
 db.init_app(app)

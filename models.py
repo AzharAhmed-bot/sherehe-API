@@ -26,7 +26,7 @@ class Sherehe(db.Model,SerializerMixin):
     id=db.Column(db.Integer() ,primary_key=True)
     name=db.Column(db.String(), unique=True)
     amount=db.Column(db.Integer(), default=0)
-    paid=db.Column(db.String, default=False)
+    paid=db.Column(db.String, default="Not paid")
 
     
 

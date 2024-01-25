@@ -3,6 +3,6 @@ export interface MyData {
     id: number;
     name: string;
     amount: number;
-    paid: boolean;
+    paid: string;
   }
   

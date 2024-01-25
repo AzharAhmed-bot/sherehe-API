@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-CORS(app, resources={r"/sherehe/*": {"origins": ["http://localhost:5173", "https://icssherehe.netlify.app/"]}})
+CORS(app, supports_credentials=True, allow_headers=["Content-Type", "Authorization"], methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 
 app.config.from_object(AppConfig)
 db.init_app(app)
@@ -107,13 +107,9 @@ def sherehe_by_id(id):
 
 
     
-@app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', 'https://icssherehe.netlify.app')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
     return response
-
 
 
 

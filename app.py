@@ -122,7 +122,7 @@ origin=[
 
 @app.after_request
 def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Origin'] = 'https://icssherehe.netlify.app'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS,PATCH'
     return response

@@ -13,6 +13,7 @@ sqlalchemy-serializer = "*"
 flask-bcrypt = "*"
 importlib-metadata = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

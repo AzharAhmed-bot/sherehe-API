@@ -73,6 +73,8 @@ def update(id):
 def sherehe():
     if request.method == "GET":
         sherehe = [sherehe.to_dict() for sherehe in Sherehe.query.all()]
+        if not sherehe:
+            return make_response(jsonify({"message":"No info yet"}))
         return jsonify(sherehe)
     elif request.method == "POST":
         data = request.get_json()
@@ -113,9 +115,14 @@ def sherehe_by_id(id):
         db.session.commit()
         return make_response(jsonify({"message": f"Sherehe {id}'s information updated"}), 200)
 
+origin=[
+    'https://localhost5173',
+    'https://icssherehe.netlify.app'
+]
+
 @app.after_request
 def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = 'https://icssherehe.netlify.app'
+    response.headers['Access-Control-Allow-Origin'] = origin
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS,PATCH'
     return response

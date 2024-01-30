@@ -9,14 +9,12 @@ import requests
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, allow_headers=["*"], methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+app.config.from_object(AppConfig)
 
 
-app.config['API_ENVIRONMENT']="sandbox"
-app.config['APP_KEY']="e5DGZf81E9ASLXaQZQLQvA1HfRoSoIfX2w296uGah31Aw8Rj"
-app.config['APP_SECRET']="u5dWLVNQLSR2XNS8XqxofExaPXGEb6ejjGmP7pDx91CkYAcLhoXEa87ffVzTbeZH"
 # Start mpesa
 mpesa_api=MpesaAPI(app)
-app.config.from_object(AppConfig)
+
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)

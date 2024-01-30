@@ -14,6 +14,8 @@ flask-bcrypt = "*"
 importlib-metadata = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+flask-mpesa = "*"
+requests = "*"
 
 [dev-packages]
 

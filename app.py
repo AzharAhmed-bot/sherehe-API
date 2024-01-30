@@ -1,17 +1,26 @@
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request,render_template
 from models import db, Users, Sherehe
 from flask_cors import CORS
 from config import AppConfig
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from flask_mpesa import MpesaAPI
+import requests
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, allow_headers=["*"], methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 
+
+app.config['API_ENVIRONMENT']="sandbox"
+app.config['APP_KEY']="e5DGZf81E9ASLXaQZQLQvA1HfRoSoIfX2w296uGah31Aw8Rj"
+app.config['APP_SECRET']="u5dWLVNQLSR2XNS8XqxofExaPXGEb6ejjGmP7pDx91CkYAcLhoXEa87ffVzTbeZH"
+# Start mpesa
+mpesa_api=MpesaAPI(app)
 app.config.from_object(AppConfig)
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
+
 
 @app.route('/')
 def index():
@@ -126,6 +135,46 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS,PATCH'
     return response
+
+
+
+
+# Trying flask mpesa with daraja API
+@app.route('/transact/mpesaexpress')
+def simulate_stk_push():
+    data = {
+        "business_shortcode": "174379", #from developers portal
+        "passcode": "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",#from developers portal
+        "amount": "1", # choose amount preferrably KSH 1
+        "phone_number":"254705359447", #phone number to be prompted to pay
+        "reference_code": "HelloWorld",#Code to inform the user of services he/she is paying for.
+        "callback_url": "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query", # cllback url should be exposes. for testing putposes you can route on host 0.0.0.0 and set the callback url to be https://youripaddress:yourport/endpoint
+        "description": "Hello World" #a description of the transaction its optional
+    }
+    resp = mpesa_api.MpesaExpress.stk_push(**data)  # ** unpacks the dictionary
+    ##use resp to capture the response
+    try:
+        resp = mpesa_api.MpesaExpress.stk_push(**data)
+        print("Response:", resp)  # Debug print
+        return resp
+    except Exception as e:
+        print("Error:", str(e))  # Debug print
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/callback-url',methods=["POST"])
+def callback_url():
+    #get json data set to this route
+    json_data = request.get_json()
+    #get result code and probably check for transaction success or failure
+    result_code=json_data["Body"]["stkCallback"]["ResultCode"]
+    message={
+        "ResultCode":json_data['ResultCode'],
+        "ResultDesc":"success",
+        "ThirdPartyTransID":"h234k2h4krhk2"
+    }
+    #if result code is 0 you can proceed and save the data else if its any other number you can track the transaction
+    return jsonify(message),200
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5500)
